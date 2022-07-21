@@ -1,0 +1,34 @@
+app:
+  profile: "development"
+  name: "API-MOCK"
+  description: "API mock for test"
+  version: "1.0"
+
+server:
+  port: 8900
+  readTimeout: 60
+  writeTimeout: 60
+  idleTimeout: 60
+  ctxTimeout: 60
+
+setup:
+  databaseType: "dynamodb"
+  responseTime: 8900
+  responseStatusCode: 200
+  isRandomTime: 60
+  count: 0
+
+databaseRDS:
+    host: localhost
+    port: 5432
+    schema: public
+    user: admin
+    password: admin
+    databaseName: postgres
+    db_timeout: 90
+    postgres_driver: postgres
+
+awsenv:
+  aws_region: 
+  aws_access_id: 
+  aws_access_secret: 

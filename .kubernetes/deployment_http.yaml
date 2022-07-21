@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-mock-api
+  namespace: test-a
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: go-mock-api
+  template:
+    metadata:
+      labels:
+        app: go-mock-api
+        version: "go-mock-api"
+    spec:
+      containers:
+      - name: go-mock-api
+        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go_mock_api:latest
+        resources:
+           requests:
+             cpu: 125m
+             memory: 100Mi
+           limits:
+             cpu: 200m
+             memory: 250Mi
+        ports:
+        - containerPort: 8900
+        env:
+        - name: PORT
+          value: "8900"
+        - name: NAME_POD
+          value: "pod-go-mock-api"
+      terminationGracePeriodSeconds: 60
