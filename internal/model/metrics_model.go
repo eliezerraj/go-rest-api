@@ -24,9 +24,11 @@ type ManagerHealthDiskSpace struct {
 }
 
 type ManagerHealth struct {
-	Status    string                 `json:"status"`
-	DB        ManagerHealthDB        `json:"db"`
-	DiskSpace ManagerHealthDiskSpace `json:"diskSpace"`
+	Status    	string                 	`json:"status"`
+	Liveness	bool					`json:"liveness"`
+	Readiness	bool					`json:"readiness"`
+	DB        	ManagerHealthDB        	`json:"db"`
+	DiskSpace 	ManagerHealthDiskSpace 	`json:"diskSpace"`
 }
 
 type ManagerHealthDB struct {
@@ -42,11 +44,13 @@ type Server struct {
 }
 
 type Setup struct {
-    ResponseTime 		int `json:"response_time"`
-    ResponseStatusCode  int `json:"response_status_code"`
-	IsRandomTime		bool `json:"is_random_time"`
-	Count				int `json:"count"`
+    ResponseTime 		int 	`json:"response_time"`
+    ResponseStatusCode  int 	`json:"response_status_code"`
+	IsRandomTime		bool 	`json:"is_random_time"`
+	Count				int 	`json:"count"`
 	DatabaseType		string  `json:"databaseType"`
+	Liveness			bool	`json:"liveness"`
+	Readiness			bool	`json:"readiness"`
 }
 
 type AwsEnv struct {

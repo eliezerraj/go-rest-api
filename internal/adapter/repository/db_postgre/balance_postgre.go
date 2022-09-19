@@ -4,6 +4,7 @@ import (
 	"log"
 	"context"
 	"time"
+
 	"github.com/go-rest-api/internal/model"
 	"github.com/go-rest-api/internal/error"
 )
@@ -16,6 +17,22 @@ func NewBalanceRepositoryDB(databaseHelper DatabaseHelper) BalancePostGreDBImple
 	return BalancePostGreDBImplementacion{
 		DatabaseHelper: databaseHelper,
 	}
+}
+
+func (b BalancePostGreDBImplementacion) Ping() (bool, error) {
+	log.Printf("+++++++++++++++++++++++++++++++++")
+	log.Printf("- DataBase POSTGRE - Ping")
+	log.Printf("+++++++++++++++++++++++++++++++++")
+	_, cancel := context.WithTimeout(context.Background(), 1000)
+	defer cancel()
+
+	client, _ := b.DatabaseHelper.GetConnection(context.Background())
+	err := client.Ping()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (b BalancePostGreDBImplementacion) AddBalance(ctx context.Context, balance model.Balance) (model.Balance, error) {	

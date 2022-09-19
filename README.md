@@ -35,7 +35,7 @@ GET http://localhost:8900/balance/list
 GET http://localhost:8900/balance/6
 GET http://localhost:8900/info
 GET http://localhost:8900/count/3
-POST http://localhost:8900/cpu
+POST http://localhost:8900/stress/cpu
     {
         "count":2000
     }
@@ -54,7 +54,9 @@ POST http://localhost:8900/balance/save
 POST http://localhost:8900/setup
     {
         "response_time" : 1,
-        "response_status_code" : 200,
+        "response_status_code" : 500,
         "is_random_time": true,
-        "count":0
+        "count":0,
+        "liveness": true,
+        "readiness": true
     }

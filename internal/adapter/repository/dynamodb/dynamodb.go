@@ -47,6 +47,11 @@ func NewBalanceRepositoryDynamoDB(	table_name string,
 	}, nil
 }
 
+
+func (b BalanceRepositoryDynamoDBImpl) Ping() (bool, error) {
+	return true, nil
+}
+
 func (b BalanceRepositoryDynamoDBImpl) AddBalance(ctx context.Context, balance model.Balance) (model.Balance, error) {
 	log.Print("AddBalance-----") 
 	

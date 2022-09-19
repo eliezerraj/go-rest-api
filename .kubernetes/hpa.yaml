@@ -1,4 +1,4 @@
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: hpa-go-rest-api
@@ -8,6 +8,18 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: go-rest-api
-  minReplicas: 8
-  maxReplicas: 16
-  targetCPUUtilizationPercentage: 70
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 85
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

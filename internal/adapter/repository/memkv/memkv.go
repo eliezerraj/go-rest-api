@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"sync"
 	"context"
+
 	"github.com/go-rest-api/internal/adapter/contract"
 	"github.com/go-rest-api/internal/model"
 	"github.com/go-rest-api/internal/error"
@@ -20,6 +21,10 @@ func NewMemKV() contract.BalanceRepositoryAdapterPort {
 	return &Memkv{
 		kv: map[string][]byte{},
 	}
+}
+
+func (repo *Memkv) Ping() (bool, error) {
+	return true, nil
 }
 
 func (repo *Memkv) ListBalance(ctx context.Context) ([]model.Balance, error) {

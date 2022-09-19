@@ -17,6 +17,7 @@ type BalanceRepositoryAdapterPort interface {
 	ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance ,error)
 	GetBalance(ctx context.Context, account string) (model.Balance ,error)
 	AddBalance(ctx context.Context, balance model.Balance) (model.Balance, error)
+	Ping() (bool, error)
 }
 
 type MetricsServiceAdapterPort interface {

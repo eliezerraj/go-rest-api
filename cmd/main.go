@@ -13,6 +13,7 @@ import (
 	"github.com/go-rest-api/internal/adapter/repository/memkv"
 	"github.com/go-rest-api/internal/adapter/repository/dynamodb"
 	"github.com/go-rest-api/internal/adapter/repository/db_postgre"
+
 )
 
 var app model.ManagerInfo
@@ -33,7 +34,7 @@ func init(){
 func main(){
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.Printf("Starting Http Server 1.0")
-	log.Print("pod :", app)
+	log.Print("pod (app):", app)
 
 	var repo_db contract.BalanceRepositoryAdapterPort
 
@@ -43,7 +44,7 @@ func main(){
 			log.Print("Erro na abertura do Database", err)
 			panic(err)
 		}
-		repo_db 	= db_postgre.NewBalanceRepositoryDB(config_postgre)
+		repo_db = db_postgre.NewBalanceRepositoryDB(config_postgre)
 	}else if (app.Setup.DatabaseType == "dynamodb"){
 		repo_db, err = dynamodb.NewBalanceRepositoryDynamoDB("balance",app)
 		if err != nil {

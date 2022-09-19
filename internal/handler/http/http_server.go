@@ -10,10 +10,12 @@ import (
 	"os/signal"
 	"context"
 	_ "net/http/pprof"
-	"github.com/gorilla/mux"
 	"encoding/json"
 
+	"github.com/gorilla/mux"
+
 	"github.com/go-rest-api/internal/model"
+
 )
 
 type DebugServer struct {
@@ -42,7 +44,7 @@ func NewHttpServer(start time.Time, http_server_setup model.ManagerInfo) HttpSer
 
 func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 	duration := time.Since(s.start).Nanoseconds()
-	log.Print("Server HTTP started", duration)
+	log.Print("Server HTTP started ms: ", duration)
 
 	myRouter := mux.NewRouter().StrictSlash(true)
 
@@ -50,6 +52,56 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 		rw.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(rw).Encode(s.http_server_setup)
 	})
+
+	myRouter.HandleFunc("/setup", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		log.Printf("post/setup")
+
+		setup := model.Setup{}
+		err := json.NewDecoder(req.Body).Decode(&setup)
+		if err != nil {
+			http.Error(rw, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		s.http_server_setup.Setup.Liveness = setup.Liveness
+		s.http_server_setup.Setup.Readiness = setup.Readiness
+
+		json.NewEncoder(rw).Encode(s.http_server_setup)
+	})
+
+	myRouter.HandleFunc("/live", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		log.Printf("get/live")
+
+		liveness := model.ManagerHealth{ Liveness: s.http_server_setup.Setup.Liveness }
+		if (!s.http_server_setup.Setup.Liveness){
+			rw.WriteHeader(http.StatusBadRequest)
+		}
+		json.NewEncoder(rw).Encode(liveness.Liveness)
+	})
+
+	myRouter.HandleFunc("/ready", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		log.Printf("get/ready")
+
+		readiness := model.ManagerHealth{ Readiness: s.http_server_setup.Setup.Readiness }
+		if (!s.http_server_setup.Setup.Readiness){
+			rw.WriteHeader(http.StatusBadRequest)
+		}
+
+		res, err := handler_balance.repository.Ping()
+		if err != nil {
+			rw.WriteHeader(http.StatusBadRequest)
+		}
+		if (!res) {
+			rw.WriteHeader(http.StatusBadRequest)
+		}
+		//log.Printf("get/ready > handler_balance.repository", res)
+
+		json.NewEncoder(rw).Encode(readiness.Readiness)
+	})
+
 
 	list_balance := myRouter.Methods(http.MethodGet).Subrouter()
     list_balance.HandleFunc("/balance/list", handler_balance.ListBalance)
@@ -73,8 +125,9 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 	cpu_stress := myRouter.Methods(http.MethodPost).Subrouter()
     cpu_stress.HandleFunc("/stress/cpu", handler_balance.StressCPU)
 
-	setup := myRouter.Methods(http.MethodPost).Subrouter()
-    setup.HandleFunc("/setup", handler_balance.SetUp)
+	// no longer use !!!!
+	//setup := myRouter.Methods(http.MethodPost).Subrouter()
+    //setup.HandleFunc("/setup", handler_balance.SetUp)
 
 	srv := http.Server{
 		Addr:         ":" +  strconv.Itoa(s.http_server_setup.Server.Port),      	

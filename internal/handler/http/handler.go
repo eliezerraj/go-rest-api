@@ -26,7 +26,7 @@ func NewBalanceHttpAdapter(metrics contract.MetricsServiceAdapterPort ,service c
 }
 
 func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/balance/list")
+	log.Printf("get/balance/list")
 	rw.Header().Set("Content-Type", "application/json")
 
 	result, err := h.service.ListBalance()
@@ -40,7 +40,7 @@ func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Reque
 }
 
 func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/balance/list")
+	log.Printf("get/balance/list")
 	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -55,7 +55,7 @@ func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.R
 }
 
 func (h *HttpBalanceAdapter) GetBalance(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/balance/{id}")
+	log.Printf("get/balance/{id}")
 	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -120,7 +120,7 @@ func (h *HttpBalanceAdapter) GetCount(rw http.ResponseWriter, req *http.Request)
 }
 
 func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/stressCPU")
+	log.Printf("post/stressCPU")
 	rw.Header().Set("Content-Type", "application/json")
 	
 	setup := model.Setup{}
@@ -135,8 +135,9 @@ func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request
 	return
 }
 
-func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/setup")
+// no longer use !!!!
+/*func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("post/setup")
 	rw.Header().Set("Content-Type", "application/json")
 	
 	setup := model.Setup{}
@@ -148,4 +149,4 @@ func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
 
 	json.NewEncoder(rw).Encode(setup)
 	return
-}
+}*/
