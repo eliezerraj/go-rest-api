@@ -26,7 +26,7 @@ func NewBalanceHttpAdapter(metrics contract.MetricsServiceAdapterPort ,service c
 }
 
 func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("get/balance/list")
+	log.Printf("/balance/list")
 	rw.Header().Set("Content-Type", "application/json")
 
 	result, err := h.service.ListBalance()
@@ -40,7 +40,7 @@ func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Reque
 }
 
 func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("get/balance/list")
+	log.Printf("/balance/list")
 	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -55,7 +55,7 @@ func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.R
 }
 
 func (h *HttpBalanceAdapter) GetBalance(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("get/balance/{id}")
+	log.Printf("/balance/{id}")
 	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
@@ -120,7 +120,7 @@ func (h *HttpBalanceAdapter) GetCount(rw http.ResponseWriter, req *http.Request)
 }
 
 func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("post/stressCPU")
+	log.Printf("/stressCPU")
 	rw.Header().Set("Content-Type", "application/json")
 	
 	setup := model.Setup{}
@@ -135,9 +135,8 @@ func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request
 	return
 }
 
-// no longer use !!!!
-/*func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("post/setup")
+func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("/setup")
 	rw.Header().Set("Content-Type", "application/json")
 	
 	setup := model.Setup{}
@@ -149,4 +148,31 @@ func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request
 
 	json.NewEncoder(rw).Encode(setup)
 	return
-}*/
+}
+
+func (h *HttpBalanceAdapter) ShowHeader(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("/header")
+	rw.Header().Set("Content-Type", "application/json")
+	
+ 	/*result := ""
+
+	if reqHeadersBytes, err := json.Marshal(req.Header); err != nil {
+		log.Println("Could not Marshal http headers")
+		result = "Could not Marshal http headers"
+	} else {
+		log.Println(string(reqHeadersBytes))
+		result = string(reqHeadersBytes)
+	}
+
+	responseBody := `{"textfield":"I'm a text.","num":1234,"list":[1,2,3]}`
+    var data map[string]interface{}
+    err := json.Unmarshal([]byte(responseBody), &data)
+    if err != nil {
+        panic(err)
+    }
+    log.Println(data["list"])
+	log.Println(result)*/
+
+	json.NewEncoder(rw).Encode(req.Header)
+	return
+}

@@ -7,10 +7,10 @@ import (
 	"github.com/go-rest-api/internal/error"
 )
 
-func MiddleWareHandler(next http.Handler) http.Handler {
+func MiddleWareHandlerToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("-------------------------------------------- \n")
-		log.Println("MiddleWareHandler (INICIO)")
+		log.Println("MiddleWareHandlerToken (INICIO)")
 		log.Println(r.Header.Get("jwt"))
 
 		if len(r.Header.Get("jwt")) == 0 {
@@ -19,7 +19,29 @@ func MiddleWareHandler(next http.Handler) http.Handler {
 			return
 		}
 	
-		log.Println("MiddleWareHandler (FIM)")
+		log.Println("MiddleWareHandlerToken (FIM)")
+		log.Printf("-------------------------------------------- \n")
+		
+		next.ServeHTTP(w, r)
+	})
+}
+
+func MiddleWareHandlerHeader(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("-------------------------------------------- \n")
+		log.Println("MiddleWareHandlerHeader (INICIO)")
+		
+		if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
+			log.Println("Could not Marshal hhtp headers")
+		} else {
+			log.Println(string(reqHeadersBytes))
+		}
+
+		//log.Println(r.Header.Get("Host"))
+		//log.Println(r.Header.Get("User-Agent"))
+		//log.Println(r.Header.Get("X-Forwarded-For"))
+
+		log.Println("MiddleWareHandlerHeader (FIM)")
 		log.Printf("-------------------------------------------- \n")
 		
 		next.ServeHTTP(w, r)
