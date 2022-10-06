@@ -152,7 +152,6 @@ func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
 
 func (h *HttpBalanceAdapter) ShowHeader(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/header")
-	rw.Header().Set("Content-Type", "application/json")
 	
  	/*result := ""
 

@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
+
 	"github.com/go-rest-api/internal/error"
 )
 
@@ -37,6 +38,10 @@ func MiddleWareHandlerHeader(next http.Handler) http.Handler {
 			log.Println(string(reqHeadersBytes))
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
+	
 		//log.Println(r.Header.Get("Host"))
 		//log.Println(r.Header.Get("User-Agent"))
 		//log.Println(r.Header.Get("X-Forwarded-For"))

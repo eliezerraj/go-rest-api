@@ -10,10 +10,12 @@ import (
 	"os/signal"
 	"context"
 	_ "net/http/pprof"
-	"github.com/gorilla/mux"
 	"encoding/json"
 
+	"github.com/gorilla/mux"
+
 	"github.com/go-rest-api/internal/model"
+
 )
 
 type DebugServer struct {
@@ -48,37 +50,48 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 
 	myRouter.HandleFunc("/info", func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Content-Type", "application/json")
+		rw.Header().Set("Access-Control-Allow-Origin", "*")
+		rw.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
+	
 		json.NewEncoder(rw).Encode(s.http_server_setup)
 	})
 
-	list_balance := myRouter.Methods(http.MethodGet).Subrouter()
+	list_balance := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     list_balance.HandleFunc("/balance/list", handler_balance.ListBalance)
+	list_balance.Use(MiddleWareHandlerHeader)
 	//list_balance.Use(MiddleWareHandlerToken)
 
-	show_header := myRouter.Methods(http.MethodGet).Subrouter()
+	show_header := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     show_header.HandleFunc("/header", handler_balance.ShowHeader)
 	show_header.Use(MiddleWareHandlerHeader)
 
-	list_balance_id := myRouter.Methods(http.MethodGet).Subrouter()
+	list_balance_id := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     list_balance_id.HandleFunc("/balance/list_by_id/{id}&{sk}", handler_balance.ListBalanceById) 
+	list_balance_id.Use(MiddleWareHandlerHeader)
 
-	get_balance := myRouter.Methods(http.MethodGet).Subrouter()
+	get_balance := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     get_balance.HandleFunc("/balance/{id}", handler_balance.GetBalance) 
+	get_balance.Use(MiddleWareHandlerHeader)
 
-	add_balance := myRouter.Methods(http.MethodPost).Subrouter()
+	add_balance := myRouter.Methods(http.MethodPost, http.MethodOptions).Subrouter()
     add_balance.HandleFunc("/balance/save", handler_balance.AddBalance)
+	add_balance.Use(MiddleWareHandlerHeader)
 
-	health := myRouter.Methods(http.MethodGet).Subrouter()
+	health := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     health.HandleFunc("/health", handler_balance.Health)
+	health.Use(MiddleWareHandlerHeader)
 
-	get_count := myRouter.Methods(http.MethodGet).Subrouter()
+	get_count := myRouter.Methods(http.MethodGet, http.MethodOptions).Subrouter()
     get_count.HandleFunc("/count/{id}", handler_balance.GetCount) 
-	
-	cpu_stress := myRouter.Methods(http.MethodPost).Subrouter()
-    cpu_stress.HandleFunc("/stress/cpu", handler_balance.StressCPU)
+	get_count.Use(MiddleWareHandlerHeader)
 
-	setup := myRouter.Methods(http.MethodPost).Subrouter()
+	cpu_stress := myRouter.Methods(http.MethodPost, http.MethodOptions).Subrouter()
+    cpu_stress.HandleFunc("/stress/cpu", handler_balance.StressCPU)
+	cpu_stress.Use(MiddleWareHandlerHeader)
+
+	setup := myRouter.Methods(http.MethodPost, http.MethodOptions).Subrouter()
     setup.HandleFunc("/setup", handler_balance.SetUp)
+	setup.Use(MiddleWareHandlerHeader)
 
 	srv := http.Server{
 		Addr:         ":" +  strconv.Itoa(s.http_server_setup.Server.Port),      	
