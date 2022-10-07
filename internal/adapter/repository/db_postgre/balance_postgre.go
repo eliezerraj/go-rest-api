@@ -4,6 +4,8 @@ import (
 	"log"
 	"context"
 	"time"
+	//"strconv"
+	//"encoding/json"
 
 	"github.com/go-rest-api/internal/model"
 	"github.com/go-rest-api/internal/error"
@@ -55,11 +57,42 @@ func (b BalancePostGreDBImplementacion) AddBalance(ctx context.Context, balance 
 		log.Panic(err) 
 		return model.Balance{}, erro.ErrInsert
 	}
-	_, err = stmt.Exec(	balance.Id, 
+	_, err = stmt.Exec(	balance.BalanceId, 
 						balance.Account,
 						balance.Amount,
 						time.Now(),
 						balance.Description)
+
+	return balance , nil
+}
+
+func (b BalancePostGreDBImplementacion) UpdateBalance(ctx context.Context, balance model.Balance) (model.Balance, error) {	
+	log.Printf("+++++++++++++++++++++++++++++++++")
+	log.Printf("- DataBase POSTGRE - UpdateBalance")
+	log.Printf("+++++++++++++++++++++++++++++++++")
+
+	_, cancel := context.WithTimeout(ctx, 1000)
+	defer cancel()
+
+	client, _ := b.DatabaseHelper.GetConnection(ctx)
+
+	stmt, err := client.Prepare(`Update balance
+									set balance_id = $1, 
+										account = $2, 
+										amount = $3, 
+										date_balance = $4, 
+										description = $5
+								where id = $6 `)
+	if err != nil {
+		log.Panic(err) 
+		return model.Balance{}, erro.ErrInsert
+	}
+	_, err = stmt.Exec(	balance.BalanceId, 
+						balance.Account,
+						balance.Amount,
+						time.Now(),
+						balance.Description,
+						balance.Id)
 
 	return balance , nil
 }
@@ -76,7 +109,7 @@ func (b BalancePostGreDBImplementacion) ListBalance(ctx context.Context) ([]mode
 	balance := model.Balance{}
 	balance_list := []model.Balance{}
 
-	rows, err := client.Query(`SELECT balance_id, account, amount, date_balance, description FROM balance`)
+	rows, err := client.Query(`SELECT id, balance_id, account, amount, date_balance, description FROM balance order by id desc`)
 	defer rows.Close()
 	if err != nil {
 		log.Println("GetBalance ", err)
@@ -84,7 +117,12 @@ func (b BalancePostGreDBImplementacion) ListBalance(ctx context.Context) ([]mode
 	}
 
 	for rows.Next() {
-		err := rows.Scan( &balance.BalanceId, &balance.Account, &balance.Amount, &balance.DateBalance , &balance.Description )
+		err := rows.Scan( 	&balance.Id, 
+							&balance.BalanceId, 
+							&balance.Account, 
+							&balance.Amount, 
+							&balance.DateBalance , 
+							&balance.Description )
 		if err != nil {
             panic(err)
         }
@@ -106,7 +144,7 @@ func (b BalancePostGreDBImplementacion) GetBalance(ctx context.Context, id strin
 
 	balance := model.Balance{}
 
-	rows, err := client.Query(`SELECT balance_id, account, amount, date_balance, description FROM balance WHERE balance_id = $1`, id)
+	rows, err := client.Query(`SELECT id, balance_id ,account, amount, date_balance, description FROM balance WHERE id = $1`, id)
 	defer rows.Close()
 	if err != nil {
 		log.Println("GetBalance ", err)
@@ -114,7 +152,7 @@ func (b BalancePostGreDBImplementacion) GetBalance(ctx context.Context, id strin
 	}
 
 	for rows.Next() {
-		err := rows.Scan( &balance.BalanceId, &balance.Account, &balance.Amount, &balance.DateBalance , &balance.Description )
+		err := rows.Scan( &balance.Id, &balance.BalanceId, &balance.Account, &balance.Amount, &balance.DateBalance , &balance.Description )
 		if err != nil {
             panic(err)
         }

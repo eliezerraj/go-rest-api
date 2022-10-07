@@ -5,11 +5,12 @@ How to setup
 Dynamo - tablename - balance {balance_id (pk) account (sk)}
 
 CREATE TABLE public.balance (
-	balance_id int4 NULL,
-	account varchar(200) NULL,
-	amount float8 NULL,
-	date_balance timestamptz NULL,
-	description varchar(200) NULL
+    id              int serial, 
+	balance_id      int4 NULL,
+	account         varchar(200) NULL,
+	amount          float8 NULL,
+	date_balance    timestamptz NULL,
+	description     varchar(200) NULL
 );
 
 1) resources/application.yml

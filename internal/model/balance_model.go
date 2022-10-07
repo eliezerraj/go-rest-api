@@ -6,12 +6,12 @@ import (
 )
 
 type Balance struct {
-	Id					string		`json:"id"`
-	BalanceId			string		`json:"balance_id"`
-    Account 			string 		`json:"account"`
-	Amount				int32 		`json:"amount"`
-    DateBalance  		time.Time 	`json:"date_balance"`
-	Description			string 		`json:"description"`
+	Id					int64		`json:"id,string,omitempty"`
+	BalanceId			string		`json:"balance_id,omitempty"`
+    Account 			string 		`json:"account,omitempty"`
+	Amount				int64 		`json:"amount,string,omitempty"`
+    DateBalance  		time.Time 	`json:"date_balance,omitempty"`
+	Description			string 		`json:"description,omitempty"`
 }
 
 type Count struct {

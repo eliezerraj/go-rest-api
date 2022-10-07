@@ -82,6 +82,36 @@ func (b BalanceRepositoryDynamoDBImpl) AddBalance(ctx context.Context, balance m
 	return balance , nil
 }
 
+func (b BalanceRepositoryDynamoDBImpl) UpdateBalance(ctx context.Context, balance model.Balance) (model.Balance, error) {
+	log.Print("UpdateBalance-----") 
+	
+	item, err := dynamodbattribute.MarshalMap(balance)
+	if err != nil {
+		log.Print("erro :", err) 
+		return model.Balance{}, erro.ErrSaveDatabase
+	}
+
+	transactItems := []*dynamodb.TransactWriteItem{}
+	transactItems = append(transactItems, &dynamodb.TransactWriteItem{Put: &dynamodb.Put{
+		TableName: b.table_name,
+		Item:      item,
+	}})
+
+	transaction := &dynamodb.TransactWriteItemsInput{TransactItems: transactItems}
+	if err := transaction.Validate(); err != nil {
+		log.Print("erro :", err) 
+		return model.Balance{}, erro.ErrSaveDatabase
+	}
+
+	_, err = b.client.TransactWriteItemsWithContext(ctx, transaction)
+	if err != nil {
+		log.Print("erro :", err) 
+		return model.Balance{}, erro.ErrSaveDatabase
+	}
+
+	return balance , nil
+}
+
 func (b BalanceRepositoryDynamoDBImpl) ListBalance(ctx context.Context) ([]model.Balance, error) {
 	log.Print("List") 
 	return []model.Balance{}, erro.ErrListNotAllowed

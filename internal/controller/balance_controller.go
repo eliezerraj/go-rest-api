@@ -79,3 +79,18 @@ func (p *service) GetBalance(account string) (model.Balance, error) {
 	
 	return res, nil
 }
+
+func (p *service) UpdateBalance(balance model.Balance) (model.Balance, error) {
+	log.Printf("UpdateBalance")
+	
+	log.Printf("--------------------------------------")
+	log.Printf("- UpdateBalance Doing Business Rules !!!!")
+	log.Printf("--------------------------------------")
+
+	_, err := p.repository.UpdateBalance(p.ctx, balance)
+	if err != nil {
+		return balance, err
+	}
+
+	return balance, nil
+}

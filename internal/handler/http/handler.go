@@ -77,6 +77,7 @@ func (h *HttpBalanceAdapter) AddBalance(rw http.ResponseWriter, req *http.Reques
 	balance := model.Balance{}
 	err := json.NewDecoder(req.Body).Decode(&balance)
     if err != nil {
+		log.Panic(err)
         http.Error(rw, err.Error(), http.StatusBadRequest)
         return
     }
@@ -106,6 +107,29 @@ func (h *HttpBalanceAdapter) Health(rw http.ResponseWriter, req *http.Request) {
 	return
 }
 
+func (h *HttpBalanceAdapter) UpdateBalance(rw http.ResponseWriter, req *http.Request) {
+	log.Printf("/balance/update")
+	rw.Header().Set("Content-Type", "application/json")
+
+	balance := model.Balance{}
+	err := json.NewDecoder(req.Body).Decode(&balance)
+    if err != nil {
+		log.Panic(err)
+        http.Error(rw, err.Error(), http.StatusBadRequest)
+        return
+    }
+
+	res, err := h.service.UpdateBalance(balance)
+	if err != nil{
+		rw.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(rw).Encode(err.Error())
+		return
+	}
+
+	json.NewEncoder(rw).Encode(res)
+	return
+}
+
 var x = 0
 func (h *HttpBalanceAdapter) GetCount(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/count/{id}")
@@ -132,21 +156,6 @@ func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request
 	res := h.metrics.StressCPU(setup.Count)
 
 	json.NewEncoder(rw).Encode(res)
-	return
-}
-
-func (h *HttpBalanceAdapter) SetUp(rw http.ResponseWriter, req *http.Request) {
-	log.Printf("/setup")
-	rw.Header().Set("Content-Type", "application/json")
-	
-	setup := model.Setup{}
-	err := json.NewDecoder(req.Body).Decode(&setup)
-    if err != nil {
-        http.Error(rw, err.Error(), http.StatusBadRequest)
-        return
-    }
-
-	json.NewEncoder(rw).Encode(setup)
 	return
 }
 

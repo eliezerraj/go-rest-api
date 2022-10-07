@@ -33,10 +33,12 @@ func MiddleWareHandlerHeader(next http.Handler) http.Handler {
 		log.Println("MiddleWareHandlerHeader (INICIO)")
 		
 		if reqHeadersBytes, err := json.Marshal(r.Header); err != nil {
-			log.Println("Could not Marshal hhtp headers")
+			log.Println("Could not Marshal http headers")
 		} else {
 			log.Println(string(reqHeadersBytes))
 		}
+
+		log.Printf("Method/URL : %s %s ", r.Method, r.URL.Path)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")

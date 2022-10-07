@@ -9,6 +9,7 @@ import (
 	"github.com/go-rest-api/internal/adapter/contract"
 	"github.com/go-rest-api/internal/model"
 	"github.com/go-rest-api/internal/error"
+
 )
 
 var mutex sync.Mutex
@@ -81,9 +82,29 @@ func (repo *Memkv) AddBalance(ctx context.Context, balance model.Balance) (model
 		log.Printf("Erro : %v \n ", err)
 		return balance, erro.ErrInsert
 	}
-	repo.kv[balance.Id] = bytes
+	repo.kv[balance.BalanceId] = bytes
 	return balance, nil
 }
+
+func (repo *Memkv) UpdateBalance(ctx context.Context, balance model.Balance) (model.Balance, error) {
+	log.Printf("repo-AddBalance")
+
+	log.Printf("####################################")
+	log.Printf("- DataBase MENKV - UpdateBalance")
+	log.Printf("####################################")
+	
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	bytes, err := json.Marshal(balance)
+	if err != nil {
+		log.Printf("Erro : %v \n ", err)
+		return balance, erro.ErrInsert
+	}
+	repo.kv[balance.BalanceId] = bytes
+	return balance, nil
+}
+
 
 func (repo *Memkv) ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance, error) {
 	return []model.Balance{}, erro.ErrFunctionNotImpl
