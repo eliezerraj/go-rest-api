@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"sync"
 	"context"
+	"strconv"
 
 	"github.com/go-rest-api/internal/adapter/contract"
 	"github.com/go-rest-api/internal/model"
@@ -82,7 +83,7 @@ func (repo *Memkv) AddBalance(ctx context.Context, balance model.Balance) (model
 		log.Printf("Erro : %v \n ", err)
 		return balance, erro.ErrInsert
 	}
-	repo.kv[balance.BalanceId] = bytes
+	repo.kv[strconv.Itoa(balance.Id)] = bytes
 	return balance, nil
 }
 

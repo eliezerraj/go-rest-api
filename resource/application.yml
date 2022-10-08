@@ -12,14 +12,16 @@ server:
   ctxTimeout: 60
 
 setup:
-  databaseType: "dynamodb"
+  databaseType: "dynamo"
   responseTime: 8900
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
+  liveness: true
+  readiness: true
 
 databaseRDS:
-    host: localhost
+    host: host.docker.internal
     port: 5432
     schema: public
     user: admin
@@ -30,5 +32,5 @@ databaseRDS:
 
 awsenv:
   aws_region: 
-  aws_access_id: 
+  aws_access_id:
   aws_access_secret: 
