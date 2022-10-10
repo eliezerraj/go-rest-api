@@ -47,7 +47,6 @@ func NewBalanceRepositoryDynamoDB(	table_name string,
 	}, nil
 }
 
-
 func (b BalanceRepositoryDynamoDBImpl) Ping() (bool, error) {
 	return true, nil
 }
@@ -113,21 +112,49 @@ func (b BalanceRepositoryDynamoDBImpl) UpdateBalance(ctx context.Context, balanc
 }
 
 func (b BalanceRepositoryDynamoDBImpl) ListBalance(ctx context.Context) ([]model.Balance, error) {
-	log.Print("List") 
-	return []model.Balance{}, erro.ErrListNotAllowed
+	log.Print("ListBalance")
+
+	key := &dynamodb.ScanInput{
+		TableName:	b.table_name,
+	}
+
+	fmt.Println("key => ", key)
+
+	result, err := b.client.Scan( key)
+	if err != nil {
+		log.Print("erro :", err) 
+		return []model.Balance{}, erro.ErrNotFound
+	}
+
+	fmt.Println("result => ", result)
+
+	balances := []model.Balance{}
+	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &balances)
+	fmt.Println("--------------------------------")
+	fmt.Println("balances => ", balances)
+    if err != nil {
+		log.Print("erro :", err) 
+		return []model.Balance{}, erro.ErrUnmarshal
+    }
+
+	if len(balances) == 0 {
+		return []model.Balance{}, erro.ErrNotFound
+	} else {
+		return balances, nil
+	}
 }
 
 func (b BalanceRepositoryDynamoDBImpl) ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance, error) {
 	log.Print("ListBalanceById") 
 
-	balance_id := pk
-	account := sk
+	//balance_id := pk
+	//account := sk
 
 	var keyCond expression.KeyConditionBuilder
 
 	keyCond = expression.KeyAnd(
-		expression.Key("balance_id").Equal(expression.Value(balance_id)),
-		expression.Key("account").BeginsWith(account),
+		expression.Key("id").Equal(expression.Value(pk)),
+		expression.Key("account").BeginsWith(sk),
 	)
 	expr, err := expression.NewBuilder().
 							WithKeyCondition(keyCond).
@@ -172,10 +199,8 @@ func (b BalanceRepositoryDynamoDBImpl) ListBalanceById(ctx context.Context, pk s
 func (b BalanceRepositoryDynamoDBImpl) GetBalance(ctx context.Context, pk string) (model.Balance, error) {
 	log.Print("GetBalance") 
 
-	balance_id := pk
-
 	var keyCond expression.KeyConditionBuilder
-	keyCond = expression.Key("balance_id").Equal(expression.Value(balance_id))
+	keyCond = expression.Key("id").Equal(expression.Value(pk))
 
 	expr, err := expression.NewBuilder().
 							WithKeyCondition(keyCond).

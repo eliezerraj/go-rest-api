@@ -39,6 +39,7 @@ func main(){
 	var repo_db contract.BalanceRepositoryAdapterPort
 
 	if (app.Setup.DatabaseType == "postgre"){
+		log.Printf("==> Database POSTGRE")
 		config_postgre, err := db_postgre.NewDatabaseHelper(app.DatabaseRDS)
 		if err != nil {
 			log.Print("Erro na abertura do Database", err)
@@ -46,12 +47,14 @@ func main(){
 		}
 		repo_db = db_postgre.NewBalanceRepositoryDB(config_postgre)
 	}else if (app.Setup.DatabaseType == "dynamodb"){
+		log.Printf("==> Database DynamoDB")
 		repo_db, err = dynamodb.NewBalanceRepositoryDynamoDB("balance",app)
 		if err != nil {
 			log.Print("Erro na abertura do Database", err)
 			panic(err)
 		}
 	}else {
+		log.Printf("==> Database MenKV")
 		repo_db = repository.NewMemKV()
 	}
 
