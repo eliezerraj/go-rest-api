@@ -81,6 +81,23 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
     show_header.HandleFunc("/header", handler_balance.ShowHeader)
 	show_header.Use(MiddleWareHandlerHeader)
 
+	myRouter.HandleFunc("/version", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		rw.Header().Set("Access-Control-Allow-Origin", "*")
+		rw.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
+		log.Printf("/version")
+		ver := os.Getenv("VERSION")
+		json.NewEncoder(rw).Encode(ver)
+	})
+
+	myRouter.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		rw.Header().Set("Access-Control-Allow-Origin", "*")
+		rw.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
+		log.Printf("/")
+		json.NewEncoder(rw).Encode(s.http_server_setup)
+	})
+
 	myRouter.HandleFunc("/info", func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Content-Type", "application/json")
 		rw.Header().Set("Access-Control-Allow-Origin", "*")
@@ -181,6 +198,8 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 		WriteTimeout: time.Duration(s.http_server_setup.Server.WriteTimeout) * time.Second,  
 		IdleTimeout:  time.Duration(s.http_server_setup.Server.IdleTimeout) * time.Second, 
 	}
+
+	log.Printf("Service Port :",  strconv.Itoa(s.http_server_setup.Server.Port))
 
 	go func() {
 		err := srv.ListenAndServe()

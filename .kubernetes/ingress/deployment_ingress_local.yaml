@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-rest-api
+  name: go-rest-api-ingress
   namespace: test-a
   labels:
-    app: "go-rest-api"
+    app: "go-rest-api-ingress"
     version: "1.0"
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: go-rest-api
+      app: go-rest-api-ingress
   template:
     metadata:
       labels:
-        app: go-rest-api
+        app: go-rest-api-ingress
         version: "go-rest-api"
     spec:
       containers:
       - name: go-mock-api
         imagePullPolicy: Never
-        image: go_rest_api:latest
+        image: go_rest_api_8901:latest
         resources:
            requests:
              cpu: 125m
@@ -32,7 +32,7 @@ spec:
              memory: 250Mi
         ports:
         - name: http
-          containerPort: 8900
+          containerPort: 8901
           protocol: TCP
         readinessProbe:
             httpGet:
@@ -59,8 +59,13 @@ spec:
             successThreshold: 1
             timeoutSeconds: 10
         env:
+        - name: VERSION
+          valueFrom:
+            configMapKeyRef:
+              name: go-rest-api-cm
+              key: version
         - name: PORT
-          value: "8900"
+          value: "8901"
         - name: NAME_POD
-          value: "pod-go-mock-api"
+          value: "pod-go-mock-api-ingress"
       terminationGracePeriodSeconds: 60

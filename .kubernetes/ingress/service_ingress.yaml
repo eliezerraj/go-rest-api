@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-ingress-go-rest-api
+  namespace: test-a
+  labels:
+    app: "go-rest-api"
+    version: "1.0"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8901
+    targetPort: 8901
+    protocol: TCP
+    name: http
+  selector:
+    app: go-rest-api-ingress

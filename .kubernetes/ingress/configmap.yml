@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-rest-api-cm
+  namespace: test-a
+  labels:
+    app: "go-rest-api"
+    version: "1.0"
+data:
+  version: "ver-01"
+  port: "8901"
+  namepod: "POD-GO-REST-API-02"

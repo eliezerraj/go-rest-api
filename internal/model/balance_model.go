@@ -6,7 +6,7 @@ import (
 )
 
 type Balance struct {
-	Id					int		`json:"id,string,omitempty"`
+	Id					int			`json:"id,string,omitempty"`
 	BalanceId			string		`json:"balance_id,omitempty"`
     Account 			string 		`json:"account,omitempty"`
 	Amount				int64 		`json:"amount,string,omitempty"`
