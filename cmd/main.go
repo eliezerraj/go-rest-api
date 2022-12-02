@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"strconv"
 
 	"github.com/go-rest-api/internal/config"
 	"github.com/go-rest-api/internal/model"
@@ -27,6 +28,12 @@ func init(){
 		log.Print("FATAL ERROR load application.yaml", err)
 		os.Exit(3)
 	}
+
+	if os.Getenv("PORT") !=  "" {
+		intVar, _ := strconv.Atoi(os.Getenv("PORT"))
+		app.Server.Port = intVar
+	}
+
 	config.PodInfo(&app)
 	log.Printf("-------------------")
 }

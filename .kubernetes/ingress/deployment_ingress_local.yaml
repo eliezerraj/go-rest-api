@@ -19,6 +19,10 @@ spec:
         app: go-rest-api-ingress
         version: "go-rest-api"
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
       containers:
       - name: go-mock-api
         imagePullPolicy: Never
@@ -65,7 +69,10 @@ spec:
               name: go-rest-api-cm
               key: version
         - name: PORT
-          value: "8901"
+          valueFrom:
+            configMapKeyRef:
+              name: go-rest-api-cm
+              key: port
         - name: NAME_POD
           value: "pod-go-mock-api-ingress"
       terminationGracePeriodSeconds: 60

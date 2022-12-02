@@ -1,10 +1,10 @@
-# docker build -t go_rest_api . -f Dockerfile-Builder
+# docker build -t go_rest_api_8901 . -f Dockerfile-Builder
 # docker run -dit --name go_rest_api -p 9000:9000 go_rest_api
 # docker run -dit --name go_rest_api -p 9000:9000 6060:6060 go_rest_api
 
 FROM golang:1.17 As builder
 
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
+RUN apt-get update && apt-get install bash && apt-get install -y --no-install-recommends ca-certificates
 
 WORKDIR /app
 
@@ -12,7 +12,13 @@ COPY . .
 WORKDIR /app/cmd
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags '-w' -o go_rest_api
 
-FROM scratch
+# Add a new user "dev" with user id 1000
+RUN useradd -u 1001 dev
+# Change to non-root privilege
+USER dev
+
+#FROM scratch
+FROM alpine
 
 WORKDIR /app
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/

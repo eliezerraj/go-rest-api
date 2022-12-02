@@ -7,6 +7,6 @@ metadata:
     app: "go-rest-api"
     version: "1.0"
 data:
-  version: "ver-01"
+  version: "ver-02"
   port: "8901"
   namepod: "POD-GO-REST-API-02"
