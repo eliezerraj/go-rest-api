@@ -142,6 +142,13 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 		json.NewEncoder(rw).Encode(readiness.Readiness)
 	})
 
+	myRouter.HandleFunc("/crash", func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-Type", "application/json")
+		log.Printf("get/crash")
+		os.Exit(3)
+		json.NewEncoder(rw).Encode("crash")
+	})
+
 	myRouter.HandleFunc("/setup", func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Content-Type", "application/json")
 		log.Printf("post/setup")

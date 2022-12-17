@@ -1,19 +1,19 @@
 app:
   profile: "development"
-  name: "API-MOCK"
-  description: "API mock for test"
+  name: "go-rest-api"
+  description: "api - go-rest-api"
   version: "1.0"
 
 server:
-  port: 8900
+  port: 8901
   readTimeout: 60
   writeTimeout: 60
   idleTimeout: 60
   ctxTimeout: 60
 
 setup:
-  databaseType: "dynamo"
-  responseTime: 8900
+  databaseType: "POSTGRES"
+  responseTime: 30
   responseStatusCode: 200
   isRandomTime: 60
   count: 0
@@ -31,6 +31,6 @@ databaseRDS:
     postgres_driver: postgres
 
 awsenv:
-  aws_region: 
-  aws_access_id:
-  aws_access_secret: 
+  aws_region: us-east-2
+  aws_access_id: AKIA43VVMZVWTG5UMWWD
+  aws_access_secret: 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

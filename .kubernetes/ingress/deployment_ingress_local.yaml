@@ -17,16 +17,16 @@ spec:
     metadata:
       labels:
         app: go-rest-api-ingress
-        version: "go-rest-api"
+        version: "1.0"
     spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 3000
         fsGroup: 2000
       containers:
-      - name: go-mock-api
+      - name: go-rest-api
         imagePullPolicy: Never
-        image: go_rest_api_8901:latest
+        image: go_rest_api:latest
         resources:
            requests:
              cpu: 125m
@@ -45,7 +45,7 @@ spec:
               httpHeaders:
                 - name: Custom-Header
                   value: Awesome
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
             successThreshold: 1
@@ -57,22 +57,12 @@ spec:
               httpHeaders:
                 - name: Custom-Header
                   value: Awesome
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 3
             successThreshold: 1
             timeoutSeconds: 10
-        env:
-        - name: VERSION
-          valueFrom:
-            configMapKeyRef:
-              name: go-rest-api-cm
-              key: version
-        - name: PORT
-          valueFrom:
-            configMapKeyRef:
-              name: go-rest-api-cm
-              key: port
-        - name: NAME_POD
-          value: "pod-go-mock-api-ingress"
+        envFrom:
+          - configMapRef:
+              name: go-rest-api-ingress
       terminationGracePeriodSeconds: 60

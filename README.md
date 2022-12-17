@@ -1,5 +1,16 @@
 # go-mock-api
 
+ENV
+PORT
+DATABASE_TYPE () POSTGRES / DYNAMO / MENKV )
+DB_HOST ( host.docker.internal )
+DB_PORT
+DB_USER
+DB_PASSWORD
+AWS_REGION
+AWS_ACCESS_KEY
+AWS_ACCESS_SECRET
+
 How to setup
 
 Dynamo - tablename - balance {balance_id (pk) account (sk)}

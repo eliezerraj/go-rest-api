@@ -1,8 +1,8 @@
-# docker build -t go_rest_api_8901 . -f Dockerfile-Builder
+# docker build -t go_rest_api . -f Dockerfile-Builder
 # docker run -dit --name go_rest_api -p 9000:9000 go_rest_api
 # docker run -dit --name go_rest_api -p 9000:9000 6060:6060 go_rest_api
 
-FROM golang:1.17 As builder
+FROM golang:1.18 As builder
 
 RUN apt-get update && apt-get install bash && apt-get install -y --no-install-recommends ca-certificates
 
