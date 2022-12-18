@@ -32,5 +32,5 @@ databaseRDS:
 
 awsenv:
   aws_region: us-east-2
-  aws_access_id: AKIA43VVMZVWTG5UMWWD
-  aws_access_secret: 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
+  aws_access_id: 
+  aws_access_secret: 
