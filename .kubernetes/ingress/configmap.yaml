@@ -9,10 +9,12 @@ metadata:
 data:
   PORT: "8901"
   API_NAME: "go-rest-api-ingress"
-  API_VERSION: "1.0"
+  API_VERSION: "1.1"
   DATABASE_TYPE: "POSTGRES"
   DB_HOST: "host.docker.internal"
   DB_PORT: "5432"
   DB_USER: "admin"
   DB_PASSWORD: "admin"
+  DB_NAME: "postgres"
+  DB_SCHEMA: "public"
   AWS_REGION: "us-east-2"

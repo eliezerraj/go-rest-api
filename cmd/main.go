@@ -68,6 +68,12 @@ func getEnv() {
 	if os.Getenv("DB_PASSWORD") !=  "" {	
 		app.DatabaseRDS.Password = os.Getenv("DB_PASSWORD")
 	}
+	if os.Getenv("DB_NAME") !=  "" {	
+		app.DatabaseRDS.DatabaseName = os.Getenv("DB_NAME")
+	}
+	if os.Getenv("DB_SCHEMA") !=  "" {	
+		app.DatabaseRDS.Schema = os.Getenv("DB_SCHEMA")
+	}
 
 	if os.Getenv("AWS_REGION") !=  "" {	
 		app.AwsEnv.Aws_region = os.Getenv("AWS_REGION")

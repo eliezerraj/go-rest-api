@@ -1,42 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-rest-api-ingress
+  name: go-rest-api
   namespace: test-a
   labels:
-    app: "go-rest-api-ingress"
+    app: "go-rest-api"
     version: "1.0"
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: go-rest-api-ingress
+      app: go-rest-api
   template:
     metadata:
       labels:
-        app: go-rest-api-ingress
+        app: go-rest-api
         version: "1.0"
     spec:
       securityContext:
         runAsUser: 1000
-        runAsGroup: 3000
-        fsGroup: 2000
+        runAsGroup: 2000
+        fsGroup: 3000
       containers:
       - name: go-rest-api
-        imagePullPolicy: Never
-        image: go_rest_api:latest
+        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go_rest_api:latest
         resources:
            requests:
-             cpu: 125m
-             memory: 100Mi
+             cpu: 100m
+             memory: 50Mi
            limits:
              cpu: 200m
-             memory: 250Mi
+             memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: false
         ports:
         - name: http
-          containerPort: 8901
+          containerPort: 8900
           protocol: TCP
         readinessProbe:
             httpGet:
@@ -49,7 +50,7 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 5
         livenessProbe:
             httpGet:
               path: /live
@@ -61,10 +62,8 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
             successThreshold: 1
-            timeoutSeconds: 10
+            timeoutSeconds: 5
         envFrom:
           - configMapRef:
-              name: go-rest-api-ingress
-          - secretRef:
-              name: rds-secret-external-secret
+              name: go-rest-api
       terminationGracePeriodSeconds: 60
