@@ -15,9 +15,9 @@ How to setup
 
 Dynamo - tablename - balance {balance_id (pk) account (sk)}
 
-CREATE TABLE public.balance (
-    id              int serial, 
-	balance_id      int4 NULL,
+CREATE TABLE balance (
+    id              serial not null,
+	balance_id      varchar(200) NULL,
 	account         varchar(200) NULL,
 	amount          float8 NULL,
 	date_balance    timestamptz NULL,

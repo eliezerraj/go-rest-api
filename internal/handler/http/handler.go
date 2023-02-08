@@ -9,6 +9,7 @@ import(
 
 	"github.com/go-rest-api/internal/adapter/contract"
 	"github.com/go-rest-api/internal/model"
+	"github.com/go-rest-api/internal/error"
 )
 
 type HttpBalanceAdapter struct {
@@ -27,10 +28,10 @@ func NewBalanceHttpAdapter(metrics contract.MetricsServiceAdapterPort ,service c
 
 func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/balance/list")
-	rw.Header().Set("Content-Type", "application/json")
-
+	
 	result, err := h.service.ListBalance()
 	if err != nil{
+		log.Printf("ERRO => %v", err.Error())
 		json.NewEncoder(rw).Encode(err.Error())
 		return
 	}
@@ -41,11 +42,11 @@ func (h *HttpBalanceAdapter) ListBalance(rw http.ResponseWriter, req *http.Reque
 
 func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/balance/list")
-	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
 	result, err := h.service.ListBalanceById(vars["id"],vars["sk"])
 	if err != nil{
+		log.Printf("ERRO => %v", err.Error())
 		json.NewEncoder(rw).Encode(err.Error())
 		return
 	}
@@ -56,11 +57,19 @@ func (h *HttpBalanceAdapter) ListBalanceById(rw http.ResponseWriter, req *http.R
 
 func (h *HttpBalanceAdapter) GetBalance(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/balance/{id}")
-	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 
-	result, err := h.service.GetBalance(vars["id"])
+	intVar, err := strconv.Atoi(vars["id"])
 	if err != nil{
+		log.Printf("ERRO => %v", err.Error())
+		rw.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(rw).Encode("erro.ErrConvertion")
+		return
+	}
+
+	result, err := h.service.GetBalance(intVar)
+	if err != nil{
+		log.Printf("ERRO => %v", err.Error())
 		rw.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(rw).Encode(err.Error())
 		return
@@ -72,18 +81,19 @@ func (h *HttpBalanceAdapter) GetBalance(rw http.ResponseWriter, req *http.Reques
 
 func (h *HttpBalanceAdapter) AddBalance(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/balance/save")
-	rw.Header().Set("Content-Type", "application/json")
 
 	balance := model.Balance{}
 	err := json.NewDecoder(req.Body).Decode(&balance)
     if err != nil {
-		log.Panic(err)
-        http.Error(rw, err.Error(), http.StatusBadRequest)
+		log.Printf("JSON inválido %v", erro.ErrUnmarshal)
+		rw.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(rw).Encode("erro.ErrUnmarshal")
         return
     }
 
 	res, err := h.service.AddBalance(balance)
 	if err != nil{
+		log.Printf("ERRO => %v", err.Error())
 		rw.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(rw).Encode(err.Error())
 		return
@@ -95,7 +105,6 @@ func (h *HttpBalanceAdapter) AddBalance(rw http.ResponseWriter, req *http.Reques
 
 func (h *HttpBalanceAdapter) Health(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/health")
-	rw.Header().Set("Content-Type", "application/json")
 
 	res := h.metrics.Health()
 	health := model.ManagerHealthDB{ Status: res }
@@ -109,14 +118,13 @@ func (h *HttpBalanceAdapter) Health(rw http.ResponseWriter, req *http.Request) {
 
 func (h *HttpBalanceAdapter) UpdateBalance(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/balance/update")
-	rw.Header().Set("Content-Type", "application/json")
 
 	balance := model.Balance{}
 	err := json.NewDecoder(req.Body).Decode(&balance)
     if err != nil {
-		log.Panic(err)
-        http.Error(rw, err.Error(), http.StatusBadRequest)
-        return
+		log.Printf("JSON inválido %v", erro.ErrUnmarshal)
+		rw.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(rw).Encode("erro.ErrUnmarshal")
     }
 
 	res, err := h.service.UpdateBalance(balance)
@@ -133,7 +141,6 @@ func (h *HttpBalanceAdapter) UpdateBalance(rw http.ResponseWriter, req *http.Req
 var x = 0
 func (h *HttpBalanceAdapter) GetCount(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/count/{id}")
-	rw.Header().Set("Content-Type", "application/json")
 	vars := mux.Vars(req)
 	x++
 
@@ -145,11 +152,11 @@ func (h *HttpBalanceAdapter) GetCount(rw http.ResponseWriter, req *http.Request)
 
 func (h *HttpBalanceAdapter) StressCPU(rw http.ResponseWriter, req *http.Request) {
 	log.Printf("/stressCPU")
-	rw.Header().Set("Content-Type", "application/json")
 	
 	setup := model.Setup{}
 	err := json.NewDecoder(req.Body).Decode(&setup)
     if err != nil {
+		log.Printf("ERRO => %v", err.Error())
         http.Error(rw, err.Error(), http.StatusBadRequest)
         return
     }

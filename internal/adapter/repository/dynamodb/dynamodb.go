@@ -147,9 +147,6 @@ func (b BalanceRepositoryDynamoDBImpl) ListBalance(ctx context.Context) ([]model
 func (b BalanceRepositoryDynamoDBImpl) ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance, error) {
 	log.Print("ListBalanceById") 
 
-	//balance_id := pk
-	//account := sk
-
 	var keyCond expression.KeyConditionBuilder
 
 	keyCond = expression.KeyAnd(
@@ -196,7 +193,7 @@ func (b BalanceRepositoryDynamoDBImpl) ListBalanceById(ctx context.Context, pk s
 	}
 }
 
-func (b BalanceRepositoryDynamoDBImpl) GetBalance(ctx context.Context, pk string) (model.Balance, error) {
+func (b BalanceRepositoryDynamoDBImpl) GetBalance(ctx context.Context, pk int) (model.Balance, error) {
 	log.Print("GetBalance") 
 
 	var keyCond expression.KeyConditionBuilder

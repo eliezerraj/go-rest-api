@@ -132,7 +132,7 @@ func (b BalancePostGreDBImplementacion) ListBalance(ctx context.Context) ([]mode
 	return balance_list , nil
 }
 
-func (b BalancePostGreDBImplementacion) GetBalance(ctx context.Context, id string) (model.Balance, error) {
+func (b BalancePostGreDBImplementacion) GetBalance(ctx context.Context, id int) (model.Balance, error) {
 	log.Printf("+++++++++++++++++++++++++++++++++")
 	log.Print("- DataBase POSTGRE - GetBalance")
 	log.Printf("+++++++++++++++++++++++++++++++++")

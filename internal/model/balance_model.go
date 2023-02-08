@@ -6,10 +6,10 @@ import (
 )
 
 type Balance struct {
-	Id					int			`json:"id,string,omitempty"`
+	Id					int			`json:"id,int,omitempty"`
 	BalanceId			string		`json:"balance_id,omitempty"`
     Account 			string 		`json:"account,omitempty"`
-	Amount				int64 		`json:"amount,string,omitempty"`
+	Amount				float32		`json:"amount,float,omitempty"`
     DateBalance  		time.Time 	`json:"date_balance,omitempty"`
 	Description			string 		`json:"description,omitempty"`
 }

@@ -65,7 +65,7 @@ func (p *service) ListBalanceById(pk string, sk string) ([]model.Balance, error)
 	return res, nil
 }
 
-func (p *service) GetBalance(account string) (model.Balance, error) {
+func (p *service) GetBalance(account int) (model.Balance, error) {
 	log.Printf("GetBalance")
 
 	log.Printf("--------------------------------------")

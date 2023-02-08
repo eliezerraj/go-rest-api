@@ -86,7 +86,7 @@ func (s HttpServer) StartHttpServer(handler_balance *HttpBalanceAdapter) {
 		rw.Header().Set("Access-Control-Allow-Origin", "*")
 		rw.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
 		log.Printf("/version")
-		ver := os.Getenv("API_VERSION")
+		ver := os.Getenv("VERSION")
 		json.NewEncoder(rw).Encode(ver)
 	})
 

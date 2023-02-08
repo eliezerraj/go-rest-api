@@ -8,7 +8,7 @@ import(
 type BalanceServiceAdapterPort interface {
 	ListBalance() ([]model.Balance ,error)
 	ListBalanceById(pk string, sk string) ([]model.Balance ,error)
-	GetBalance(account string) (model.Balance ,error)
+	GetBalance(pk int) (model.Balance ,error)
 	AddBalance(balance model.Balance) (model.Balance, error)
 	UpdateBalance(balance model.Balance) (model.Balance, error)
 }
@@ -16,7 +16,7 @@ type BalanceServiceAdapterPort interface {
 type BalanceRepositoryAdapterPort interface {
 	ListBalance(ctx context.Context) ([]model.Balance ,error)
 	ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance ,error)
-	GetBalance(ctx context.Context, account string) (model.Balance ,error)
+	GetBalance(ctx context.Context, pk int) (model.Balance ,error)
 	AddBalance(ctx context.Context, balance model.Balance) (model.Balance, error)
 	UpdateBalance(ctx context.Context, balance model.Balance) (model.Balance, error)
 	Ping() (bool, error)

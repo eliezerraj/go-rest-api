@@ -49,14 +49,14 @@ func (repo *Memkv) ListBalance(ctx context.Context) ([]model.Balance, error) {
 	return res ,nil
 }
 
-func (repo *Memkv) GetBalance(ctx context.Context, account string) (model.Balance, error) {
+func (repo *Memkv) GetBalance(ctx context.Context, pk int) (model.Balance, error) {
 	log.Printf("GetBalance")
 
 	log.Printf("####################################")
 	log.Printf("- DataBase MENKV - GetBalance")
 	log.Printf("####################################")
 
-	if value, ok := repo.kv[account]; ok {
+	if value, ok := repo.kv[strconv.Itoa(pk)]; ok {
 		balance := model.Balance{}
 		err := json.Unmarshal(value, &balance)
 		if err != nil {
@@ -105,7 +105,6 @@ func (repo *Memkv) UpdateBalance(ctx context.Context, balance model.Balance) (mo
 	repo.kv[balance.BalanceId] = bytes
 	return balance, nil
 }
-
 
 func (repo *Memkv) ListBalanceById(ctx context.Context, pk string, sk string) ([]model.Balance, error) {
 	return []model.Balance{}, erro.ErrFunctionNotImpl
