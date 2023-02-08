@@ -57,6 +57,8 @@ type AwsEnv struct {
     Aws_region 			string `json:"aws_region"`
     Aws_access_id  		string `json:"aws_access_id"`
 	Aws_access_secret	string `json:"aws_access_secret"`
+	AwsSsmSecretId		string `json:"aws_ssm_secret_id"`
+	IcUseSsm			bool `json:"ic_use_ssm"`
 }
 
 type DatabaseRDS struct {

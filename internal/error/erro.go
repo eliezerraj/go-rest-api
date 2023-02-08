@@ -15,6 +15,7 @@ var (
 	ErrInsert = errors.New("Erro na inserção do dado")
 	ErrUnmarshal = errors.New("Erro na conversão do JSON")
 	ErrUnauthorized = errors.New("Erro de autorização")
+	ErrConvertion = errors.New("Erro de conversão de String para Inteiro")
 )
 
 func HandlerHttpError(w http.ResponseWriter, err error) { 
