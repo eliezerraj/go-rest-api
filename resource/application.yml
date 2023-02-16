@@ -12,7 +12,7 @@ server:
   ctxTimeout: 60
 
 setup:
-  databaseType: "POSTGRES"
+  databaseType: "DYNAMO"
   responseTime: 30
   responseStatusCode: 200
   isRandomTime: 60
@@ -24,13 +24,15 @@ databaseRDS:
     host: host.docker.internal
     port: 5432
     schema: public
-    user: admin
-    password: admin
+    user: postgres
+    password: postgres
     databaseName: postgres
     db_timeout: 90
     postgres_driver: postgres
 
 awsenv:
   aws_region: us-east-2
-  aws_access_id: 
-  aws_access_secret: 
+  aws_access_id: AKIA43VVMZVWSMQSGPW7
+  aws_access_secret: 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
+  awsSsmSecretId: arn:aws:secretsmanager:us-east-2:908671954593:secret:rds-arch-secret-YHHAF2
+  icUseSsm: false
