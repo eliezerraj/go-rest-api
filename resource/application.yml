@@ -32,7 +32,7 @@ databaseRDS:
 
 awsenv:
   aws_region: us-east-2
-  aws_access_id: AKIA43VVMZVWSMQSGPW7
-  aws_access_secret: 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
+  aws_access_id: 
+  aws_access_secret: 
   awsSsmSecretId: arn:aws:secretsmanager:us-east-2:908671954593:secret:rds-arch-secret-YHHAF2
   icUseSsm: false
