@@ -1,0 +1,62 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-rest-api-alb
+  namespace: test-b
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/subnets: subnet-0956adabb1a865c9f, subnet-0919b0c60fd95ced5, subnet-0c80cc19ec025d0dd
+    alb.ingress.kubernetes.io/security-groups: sg-02d30bad7ac866825
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/success-codes: 200,404,301
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |-
+      {
+        "Type": "redirect",
+        "RedirectConfig": {
+          "Protocol": "HTTPS",
+          "Port": "443",
+          "StatusCode": "HTTP_301"
+        }
+      }
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: |-
+      [{
+        "HTTP": 80
+      }, {
+        "HTTPS": 443
+      }]
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=3600
+    alb.ingress.kubernetes.io/tags: Name=go-rest-api-alb,Service=proxy
+    alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=300
+    alb.ingress.kubernetes.io/target-node-labels: gitpod.io/workload_meta=true
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-FS-1-2-Res-2020-10
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:908671954593:certificate/c9e983dd-0572-4f1e-ba4f-27d3f7c73559
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/load-balancer-name: go-rest-api-new-alb
+spec:
+  defaultBackend:
+    service:
+      name: go-rest-api-nodeport
+      port:
+        number: 8900
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: go-rest-api-best-effort
+                port:
+                  number: 8902
+            path: /
+            pathType: Prefix
+     - http:
+        paths:
+          - backend:
+              service:
+                name: go-rest-api-burstable
+                port:
+                  number: 8901
+            path: /burstable
+            pathType: Prefix           

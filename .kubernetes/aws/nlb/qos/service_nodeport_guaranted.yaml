@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-go-rest-api-guaranted
+  namespace: test-b
+  labels:
+    app: svc-go-rest-api-guaranted
+    version: "1.0"
+spec:
+  type: NodePort
+  ports:
+  - port: 8903
+    targetPort: 8900
+    protocol: TCP
+  selector:
+    app: go-rest-api-guaranted

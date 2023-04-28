@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-rest-api-burstable
+  namespace: test-b
+  labels:
+    app: "go-rest-api-burstable"
+    version: "1.0.1"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: go-rest-api-burstable
+  template:
+    metadata:
+      labels:
+        app: go-rest-api-burstable
+        version: "1.0"
+    spec:
+      serviceAccountName: go-rest-api
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - go-rest-api-burstable
+              topologyKey: topology.kubernetes.io/zone
+            weight: 100
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 2000
+        fsGroup: 3000
+      containers:
+      - name: go-rest-api-burstable
+        image: 908671954593.dkr.ecr.us-east-2.amazonaws.com/go_rest_api:latest
+        resources:
+           requests:
+             cpu: 100m
+             memory: 50Mi
+           limits:
+             cpu: 200m
+             memory: 100Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+        ports:
+        - name: http
+          containerPort: 8900
+          protocol: TCP
+        readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+              httpHeaders:
+                - name: Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 4
+            periodSeconds: 15
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+        livenessProbe:
+            httpGet:
+              path: /live
+              port: http
+              httpHeaders:
+                - name: Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 2
+            periodSeconds: 15
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 5
+        envFrom:
+          - configMapRef:
+              name: go-rest-api
+          - secretRef:
+              name: rds-secret-external-secret    
+      terminationGracePeriodSeconds: 315

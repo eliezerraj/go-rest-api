@@ -1,0 +1,10 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: tgb-go-rest-api-r500-nodeport
+  namespace: test-b
+spec:
+  serviceRef:
+    name: svc-go-rest-api-r500-nodeport
+    port: 8906
+  targetGroupARN: arn:aws:elasticloadbalancing:us-east-2:908671954593:targetgroup/tg-go-rest-api-500-nodeport/347d84f5b8a8ae4a

@@ -1,0 +1,10 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: tgb-go-rest-api-burstable
+  namespace: test-b
+spec:
+  serviceRef:
+    name: svc-go-rest-api-burstable
+    port: 8901
+  targetGroupARN: arn:aws:elasticloadbalancing:us-east-2:908671954593:targetgroup/tg-go-rest-api-burstable/f751804547ba1076

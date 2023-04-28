@@ -1,0 +1,10 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: go-rest-api-internal
+  namespace: test-a
+spec:
+  serviceRef:
+    name: go-rest-api-internal
+    port: 8902
+  targetGroupARN: arn:aws:elasticloadbalancing:us-east-2:908671954593:targetgroup/go-rest-api-alb-internal/62abfbf192fc87e8

@@ -1,0 +1,10 @@
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: tgb-go-rest-api-guaranted
+  namespace: test-b
+spec:
+  serviceRef:
+    name: svc-go-rest-api-guaranted
+    port: 8903
+  targetGroupARN: arn:aws:elasticloadbalancing:us-east-2:908671954593:targetgroup/tg-go-rest-api-guaranted/29254b0382127706
