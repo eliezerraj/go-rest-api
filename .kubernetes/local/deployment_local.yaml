@@ -69,4 +69,8 @@ spec:
               name: go-rest-api
           - secretRef:
               name: rds-secret-external-secret
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","sleep 2"]
       terminationGracePeriodSeconds: 60
